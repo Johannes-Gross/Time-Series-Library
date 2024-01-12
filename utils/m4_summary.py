@@ -48,11 +48,12 @@ def mape(forecast, target):
 
 
 class M4Summary:
-    def __init__(self, file_path, root_path):
+    def __init__(self, file_path, root_path, custom_eval=False):
         self.file_path = file_path
         self.training_set = M4Dataset.load(training=True, dataset_file=root_path)
         self.test_set = M4Dataset.load(training=False, dataset_file=root_path)
         self.naive_path = os.path.join(root_path, 'submission-Naive2.csv')
+        self.custom_eval = custom_eval
 
     def evaluate(self):
         """
@@ -71,7 +72,11 @@ class M4Summary:
         naive2_mases = {}
         grouped_smapes = {}
         grouped_mapes = {}
-        for group_name in M4Meta.seasonal_patterns:
+        if self.custom_eval:
+            seasonal_patterns = ['Yearly', 'Weekly', 'Hourly']
+        else:
+            seasonal_patterns = M4Meta.seasonal_patterns
+        for group_name in seasonal_patterns:
             file_name = self.file_path + group_name + "_forecast.csv"
             if os.path.exists(file_name):
                 model_forecast = pd.read_csv(file_name).values
@@ -121,20 +126,24 @@ class M4Summary:
         def group_count(group_name):
             return len(np.where(self.test_set.groups == group_name)[0])
 
-        weighted_score = {}
-        for g in ['Yearly', 'Quarterly', 'Monthly']:
-            weighted_score[g] = scores[g] * group_count(g)
-            scores_summary[g] = scores[g]
+        if self.custom_eval:
+            for g in ['Yearly', 'Weekly', 'Hourly']:
+                scores_summary[g] = scores[g]
+        else:
+            weighted_score = {}
+            for g in ['Yearly', 'Quarterly', 'Monthly']:
+                weighted_score[g] = scores[g] * group_count(g)
+                scores_summary[g] = scores[g]
 
-        others_score = 0
-        others_count = 0
-        for g in ['Weekly', 'Daily', 'Hourly']:
-            others_score += scores[g] * group_count(g)
-            others_count += group_count(g)
-        weighted_score['Others'] = others_score
-        scores_summary['Others'] = others_score / others_count
+            others_score = 0
+            others_count = 0
+            for g in ['Weekly', 'Daily', 'Hourly']:
+                others_score += scores[g] * group_count(g)
+                others_count += group_count(g)
+            weighted_score['Others'] = others_score
+            scores_summary['Others'] = others_score / others_count
 
-        average = np.sum(list(weighted_score.values())) / len(self.test_set.groups)
-        scores_summary['Average'] = average
+            average = np.sum(list(weighted_score.values())) / len(self.test_set.groups)
+            scores_summary['Average'] = average
 
         return scores_summary
