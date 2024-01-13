@@ -26,7 +26,7 @@ def mase(training_series, testing_series, prediction_series):
 
 # Naïve2 forecasting function
 def naive2_forecast(series, prediction_length=48):
-    return series[-prediction_length-24:-24]
+    return series[-prediction_length:]
 
 # Script modification for the M4 dataset
 def process_m4_series(train, test, prediction_length=48):
@@ -62,34 +62,31 @@ def process_m4_series(train, test, prediction_length=48):
     # Forecasting
     forecast_scaled = best_model.forecast(steps=prediction_length)
 
-    # Rescale the forecast
-    forecast = scaler.inverse_transform(forecast_scaled.reshape(-1, 1)).flatten()
-
-    # Calculate the new metrics
-    smape_value = smape(test[:prediction_length], forecast)
-    mape_value = mape(test[:prediction_length], forecast)
-    mase_value = mase(train, test[:prediction_length], forecast)
+    # Calculate the new metrics on scaled values
+    smape_value = smape(test_scaled[:prediction_length], forecast_scaled)
+    mape_value = mape(test_scaled[:prediction_length], forecast_scaled)
+    mase_value = mase(train_scaled, test_scaled[:prediction_length], forecast_scaled)
 
      # Calculate the metrics for the forecast
-    smape_forecast = smape(test[:prediction_length], forecast)
-    mase_forecast = mase(train, test[:prediction_length], forecast)
+    smape_forecast = smape(test_scaled[:prediction_length], forecast_scaled)
+    mase_forecast = mase(train_scaled, test_scaled[:prediction_length], forecast_scaled)
 
     # Calculate the metrics for the Naïve2 model
-    naive2_prediction = naive2_forecast(test, prediction_length)
-    smape_naive2 = smape(test[:prediction_length], naive2_prediction)
-    mase_naive2 = mase(train, test[:prediction_length], naive2_prediction)
+    naive2_prediction = naive2_forecast(test_scaled, prediction_length)
+    smape_naive2 = smape(test_scaled[:prediction_length], naive2_prediction)
+    mase_naive2 = mase(train_scaled, test_scaled[:prediction_length], naive2_prediction)
 
     # Calculate OWA
     owa = 0.5 * (smape_forecast / smape_naive2 + mase_forecast / mase_naive2)
 
     # Plotting
     plt.figure(figsize=(12, 6))
-    #plt.plot(train, label='Training Data')
-    plt.plot(range(len(train), len(train) + len(test)), test, label='Test Data')
-    plt.plot(range(len(train), len(train) + prediction_length), forecast, label='Forecast', color='red')
-    plt.title('ARIMA Forecast vs Actual')
+    #plt.plot(train_scaled, label='Training Data')
+    plt.plot(range(len(train_scaled), len(train_scaled) + len(test_scaled)), test_scaled, label='Test Data')
+    plt.plot(range(len(train_scaled), len(train_scaled) + prediction_length), forecast_scaled, label='Forecast', color='red')
+    plt.title('ARIMA Forecast vs Actual (Scaled)')
     plt.xlabel('Time Steps')
-    plt.ylabel('Values')
+    plt.ylabel('Scaled Values')
     plt.legend()
     plt.grid(True)
     plt.savefig(f'../test_results/ARIMA/M4/Hourly/Hourly_forecast_next_{prediction_length}_steps_scaled.png')
