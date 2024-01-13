@@ -13,12 +13,12 @@ import warnings
 warnings.filterwarnings("ignore")
 
 # Load the dataset
-data_path = '../dataset/weather/weather.csv'
+data_path = '../dataset/illness/national_illness.csv'
 data = pd.read_csv(data_path)
 
 # Splitting the dataset into training, validation, and test sets
-train_ratio = 36792  / (36792 + 5271 + 10540)
-val_ratio = 5271 / (36792 + 5271 + 10540)
+train_ratio = 617 / (617 + 74 + 170)
+val_ratio = 74 / (617 + 74 + 170)
 train_index = int(len(data) * train_ratio)
 val_index = int(len(data) * (train_ratio + val_ratio))
 train_data = data.iloc[:train_index]
@@ -71,7 +71,7 @@ print("Summary of the Best ARIMA Model:")
 print(best_model.summary())
 
 # Forecasting
-prediction_length = 96  # Variable for prediction length
+prediction_length = 24  # Variable for prediction length
 forecast = best_model.forecast(steps=prediction_length, exog=test_data_scaled.drop(columns=['OT']).iloc[:prediction_length])
 
 # Calculate MSE and MAE for the forecast
@@ -87,12 +87,12 @@ plt.xlabel('Time Steps')
 plt.ylabel('Scaled OT')
 plt.legend()
 plt.grid(True)
-plt.savefig(f'../test_results/ARIMA/Weather/Weather_forecast_next_{prediction_length}_steps_scaled.png')
+plt.savefig(f'../test_results/ARIMA/Illness/ILI_forecast_next_{prediction_length}_steps_scaled.png')
 plt.show()
 
 print(f"Scaled Forecasting Results for {prediction_length} Steps - MSE: {mse}, MAE: {mae}")
 
 # Save results to a file
 results_dict = {'scaled_mse': mse, 'scaled_mae': mae, 'prediction_length': prediction_length}
-with open('../test_results/ARIMA/Weather/ARIMA_Weather_Scaled_Forecast_Results.pkl', 'wb') as file:
+with open('../test_results/ARIMA/Illness/ARIMA_Illness_Scaled_Forecast_Results.pkl', 'wb') as file:
     pickle.dump(results_dict, file)

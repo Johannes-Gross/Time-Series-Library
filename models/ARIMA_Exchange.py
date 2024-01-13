@@ -1,11 +1,14 @@
-# Import necessary libraries
 import pandas as pd
 import numpy as np
 from statsmodels.tsa.arima.model import ARIMA
 from sklearn.metrics import mean_squared_error, mean_absolute_error
+from sklearn.preprocessing import StandardScaler
 from itertools import product
 from tqdm import tqdm
 import pickle
+import matplotlib
+matplotlib.use('agg')
+import matplotlib.pyplot as plt
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -22,6 +25,18 @@ train_data = data.iloc[:train_index]
 val_data = data.iloc[train_index:val_index]
 test_data = data.iloc[val_index:]
 
+# Combine training and validation data
+combined_data = pd.concat([train_data, val_data])
+
+# Normalize the combined dataset
+scaler = StandardScaler()
+combined_data_scaled = scaler.fit_transform(combined_data.drop(columns=['date']))
+combined_data_scaled = pd.DataFrame(combined_data_scaled, columns=combined_data.columns.drop(['date']))
+
+# Normalize the test dataset
+test_data_scaled = scaler.transform(test_data.drop(columns=['date']))
+test_data_scaled = pd.DataFrame(test_data_scaled, columns=test_data.columns.drop(['date']))
+
 # Define the p, d, and q parameters
 p = range(0, 5)
 d = range(0, 2)
@@ -30,64 +45,54 @@ q = range(0, 5)
 # Generate all different combinations of p, d, and q triplets
 pdq = [(x[0], x[1], x[2]) for x in list(product(p, d, q))]
 
-# Grid Search based on MSE and MAE on validation set
-best_mse = np.inf
-best_mae = np.inf
+# Grid Search for the best ARIMA model based on AIC and BIC
+best_aic = np.inf
+best_bic = np.inf
 best_pdq = None
 best_model = None
 
 for param in tqdm(pdq, desc="ARIMA Grid Search"):
-    model = ARIMA(train_data['OT'], order=param, exog=train_data.drop(columns=['date', 'OT']))  # ARIMA with exogenous variables
-    results = model.fit()
-    forecast = results.forecast(steps=len(val_data), exog=val_data.drop(columns=['date', 'OT']))  # Forecast with exogenous variables
+    try:
+        model = ARIMA(combined_data_scaled['OT'], exog=combined_data_scaled.drop(columns=['OT']), order=param)
+        results = model.fit()
 
-    mse = mean_squared_error(val_data['OT'], forecast)
-    mae = mean_absolute_error(val_data['OT'], forecast)
+        if results.aic < best_aic or results.bic < best_bic:
+            best_aic = results.aic
+            best_bic = results.bic
+            best_pdq = param
+            best_model = results
+    except:
+        continue
 
-    if mse < best_mse and mae < best_mae:
-        best_mse = mse
-        best_mae = mae
-        best_pdq = param
-        best_model = results
-
-print('Best ARIMA{} model - MSE:{} MAE:{}'.format(best_pdq, best_mse, best_mae))
+print('Best ARIMA{} model - AIC:{} BIC:{}'.format(best_pdq, best_aic, best_bic))
 
 # Print a summary of the best ARIMA model
 print("Summary of the Best ARIMA Model:")
 print(best_model.summary())
 
-# Define prediction lengths
-pred_lengths = [96, 192, 336, 720]
+# Forecasting
+prediction_length = 96  # Variable for prediction length
+forecast = best_model.forecast(steps=prediction_length, exog=test_data_scaled.drop(columns=['OT']).iloc[:prediction_length])
 
-# Forecasting for different prediction lengths on the test set
-results_dict = {}
-total_mse, total_mae = 0, 0
+# Calculate MSE and MAE for the forecast
+mse = mean_squared_error(test_data_scaled['OT'][:prediction_length], forecast)
+mae = mean_absolute_error(test_data_scaled['OT'][:prediction_length], forecast)
 
-for pred_len in pred_lengths:
-    exog_test = test_data.drop(columns=['date', 'OT']).iloc[:pred_len]  # Exogenous data for each prediction length
-    forecast = best_model.forecast(steps=pred_len, exog=exog_test)  # Forecast with exogenous variables on test set
+# Plot the forecast against the test_data
+plt.figure(figsize=(12, 6))
+plt.plot(range(prediction_length), test_data_scaled['OT'][:prediction_length], label='Actual Scaled')
+plt.plot(range(prediction_length), forecast, label='Forecast Scaled', color='red')
+plt.title(f'ARIMA Forecast vs Actual for Next {prediction_length} Steps (Scaled)')
+plt.xlabel('Time Steps')
+plt.ylabel('Scaled OT')
+plt.legend()
+plt.grid(True)
+plt.savefig(f'../test_results/ARIMA/Exchange/Exchange_forecast_next_{prediction_length}_steps_scaled.png')
+plt.show()
 
-    mse = mean_squared_error(test_data['OT'][:pred_len], forecast)
-    mae = mean_absolute_error(test_data['OT'][:pred_len], forecast)
+print(f"Scaled Forecasting Results for {prediction_length} Steps - MSE: {mse}, MAE: {mae}")
 
-    results_dict[pred_len] = {'mse': mse, 'mae': mae}
-    total_mse += mse
-    total_mae += mae
-
-# Display results for each prediction length
-for pred_len, result in results_dict.items():
-    print(f"Results for pred_len={pred_len}:")
-    print(f"MSE: {result['mse']}, MAE: {result['mae']}\n")
-
-# Calculate and add the average MSE and MAE to the results_dict
-avg_mse = total_mse / len(pred_lengths)
-avg_mae = total_mae / len(pred_lengths)
-results_dict['average'] = {'mse': avg_mse, 'mae': avg_mae}
-
-# Print average results
-print(f"Average Results:")
-print(f"Average MSE: {results_dict['average']['mse']}, Average MAE: {results_dict['average']['mae']}")
-
-# Save results_dict to a file using pickle
-with open('../results/ARIMA/ARIMA_Exchange.pkl', 'wb') as file:
+# Save results to a file
+results_dict = {'scaled_mse': mse, 'scaled_mae': mae, 'prediction_length': prediction_length}
+with open('../test_results/ARIMA/Exchange/ARIMA_Exchange_Scaled_Forecast_Results.pkl', 'wb') as file:
     pickle.dump(results_dict, file)
