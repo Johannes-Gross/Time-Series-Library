@@ -1,6 +1,6 @@
-# Time Series Library (TSlib)
+# Enhancing Temporal Causality in TimesNet with 2D TCN
 
-The current repository is based on a forked version of the TSlib and contains the code based used to complete a project conducted in the context of the "Deep Learning" class taught during the Fall semester of 2023 at ETH Zurich.
+The current repository is based on a forked version of the TSlib and contains the code base used in a project for Deep Learning class taught during the Fall semester of 2023 at ETH Zurich.
 
 In the scope of this project, we attempted to add the element of causality in the seminal TimesNet work. In order to test our approach we deploy a plethora of datasets from various domains and train different baseline models to compare with our proposed method. 
 
@@ -12,42 +12,6 @@ We provide a neat code base to evaluate advanced deep time series models or deve
 
 :triangular_flag_on_post:**News** (2023.09) We added a detailed [tutorial](https://github.com/thuml/Time-Series-Library/blob/main/tutorial/TimesNet_tutorial.ipynb) for [TimesNet](https://openreview.net/pdf?id=ju_Uqw384Oq) and this library, which is quite friendly to beginners of deep time series analysis.
 
-## Leaderboard for Time Series Analysis
-
-Till October 2023, the top three models for five different tasks are:
-
-| Model<br>Ranking | Long-term<br>Forecasting                          | Short-term<br>Forecasting                                    | Imputation                                                   | Classification                                         |  Anomaly<br>Detection                                    |
-| ---------------- |---------------------------------------------------| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | -------------------------------------------------- |
-| 🥇 1st            | [iTransformer](https://arxiv.org/abs/2310.06625)  | [TimesNet](https://arxiv.org/abs/2210.02186)                 | [TimesNet](https://arxiv.org/abs/2210.02186)                 | [TimesNet](https://arxiv.org/abs/2210.02186)                 | [TimesNet](https://arxiv.org/abs/2210.02186)       |
-| 🥈 2nd            |   [PatchTST](https://github.com/yuqinie98/PatchTST)    | [Non-stationary<br/>Transformer](https://github.com/thuml/Nonstationary_Transformers) | [Non-stationary<br/>Transformer](https://github.com/thuml/Nonstationary_Transformers) | [Non-stationary<br/>Transformer](https://github.com/thuml/Nonstationary_Transformers) | [FEDformer](https://github.com/MAZiqing/FEDformer) |
-| 🥉 3rd            | [TimesNet](https://arxiv.org/abs/2210.02186) | [FEDformer](https://github.com/MAZiqing/FEDformer)           | [Autoformer](https://github.com/thuml/Autoformer)            | [Informer](https://github.com/zhouhaoyi/Informer2020)        | [Autoformer](https://github.com/thuml/Autoformer)  |
-
-
-**Note: We will keep updating this leaderboard.** If you have proposed advanced and awesome models, you can send us your paper/code link or raise a pull request. We will add them to this repo and update the leaderboard as soon as possible.
-
-**Compared models of this leaderboard.** ☑ means that their codes have already been included in this repo.
-  - [x] **iTransformer** - iTransformer: Inverted Transformers Are Effective for Time Series Forecasting [[arXiv 2023]](https://arxiv.org/abs/2310.06625) [[Code]](https://github.com/thuml/Time-Series-Library/blob/main/models/iTransformer.py).
-  - [x] **PatchTST** - A Time Series is Worth 64 Words: Long-term Forecasting with Transformers [[ICLR 2023]](https://openreview.net/pdf?id=Jbdc0vTOcol) [[Code]](https://github.com/thuml/Time-Series-Library/blob/main/models/PatchTST.py).
-  - [x] **TimesNet** - TimesNet: Temporal 2D-Variation Modeling for General Time Series Analysis [[ICLR 2023]](https://openreview.net/pdf?id=ju_Uqw384Oq) [[Code]](https://github.com/thuml/Time-Series-Library/blob/main/models/TimesNet.py)
- [[ICLR 2024]](https://arxiv.org/abs/2310.06625) [[Code]](https://github.com/thuml/Time-Series-Library/blob/main/models/iTransformer.py).
-  - [x] **DLinear** - Are Transformers Effective for Time Series Forecasting? [[AAAI 2023]](https://arxiv.org/pdf/2205.13504.pdf) [[Code]](https://github.com/thuml/Time-Series-Library/blob/main/models/DLinear.py).
-  - [x] **LightTS** - Less Is More: Fast Multivariate Time Series Forecasting with Light Sampling-oriented MLP Structures [[arXiv 2022]](https://arxiv.org/abs/2207.01186) [[Code]](https://github.com/thuml/Time-Series-Library/blob/main/models/LightTS.py).
-  - [x] **ETSformer** - ETSformer: Exponential Smoothing Transformers for Time-series Forecasting [[arXiv 2022]](https://arxiv.org/abs/2202.01381) [[Code]](https://github.com/thuml/Time-Series-Library/blob/main/models/ETSformer.py).
-  - [x] **Non-stationary Transformer** - Non-stationary Transformers: Exploring the Stationarity in Time Series Forecasting [[NeurIPS 2022]](https://openreview.net/pdf?id=ucNDIDRNjjv) [[Code]](https://github.com/thuml/Time-Series-Library/blob/main/models/Nonstationary_Transformer.py).
-  - [x] **FEDformer** - FEDformer: Frequency Enhanced Decomposed Transformer for Long-term Series Forecasting [[ICML 2022]](https://proceedings.mlr.press/v162/zhou22g.html) [[Code]](https://github.com/thuml/Time-Series-Library/blob/main/models/FEDformer.py).
-  - [x] **Pyraformer** - Pyraformer: Low-complexity Pyramidal Attention for Long-range Time Series Modeling and Forecasting [[ICLR 2022]](https://openreview.net/pdf?id=0EXmFzUn5I) [[Code]](https://github.com/thuml/Time-Series-Library/blob/main/models/Pyraformer.py).
-  - [x] **Autoformer** - Autoformer: Decomposition Transformers with Auto-Correlation for Long-Term Series Forecasting [[NeurIPS 2021]](https://openreview.net/pdf?id=I55UqU-M11y) [[Code]](https://github.com/thuml/Time-Series-Library/blob/main/models/Autoformer.py).
-  - [x] **Informer** - Informer: Beyond Efficient Transformer for Long Sequence Time-Series Forecasting [[AAAI 2021]](https://ojs.aaai.org/index.php/AAAI/article/view/17325/17132) [[Code]](https://github.com/thuml/Time-Series-Library/blob/main/models/Informer.py).
-  - [x] **Reformer** - Reformer: The Efficient Transformer [[ICLR 2020]](https://openreview.net/forum?id=rkgNKkHtvB) [[Code]](https://github.com/thuml/Time-Series-Library/blob/main/models/Reformer.py).
-  - [x] **Transformer** - Attention is All You Need [[NeurIPS 2017]](https://proceedings.neurips.cc/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf) [[Code]](https://github.com/thuml/Time-Series-Library/blob/main/models/Transformer.py).
-
-See our latest paper [[TimesNet]](https://arxiv.org/abs/2210.02186) for the comprehensive benchmark. We will release a real-time updated online version soon.
-
-**Newly added baselines.** We will add them to the leaderboard after a comprehensive evaluation.
-  - [x] **Koopa** - Koopa: Learning Non-stationary Time Series Dynamics with Koopman Predictors [[NeurIPS 2023]](https://arxiv.org/pdf/2305.18803.pdf) [[Code]](https://github.com/thuml/Time-Series-Library/blob/main/models/Koopa.py).
-  - [x] **FiLM** - FiLM: Frequency improved Legendre Memory Model for Long-term Time Series Forecasting [[NeurIPS 2022]](https://openreview.net/forum?id=zTQdHSQUQWc)[[Code]](https://github.com/thuml/Time-Series-Library/blob/main/models/FiLM.py).
-  - [x] **MICN** - MICN: Multi-scale Local and Global Context Modeling for Long-term Series Forecasting [[ICLR 2023]](https://openreview.net/pdf?id=zt53IDUR1U)[[Code]](https://github.com/thuml/Time-Series-Library/blob/main/models/MICN.py).
-  - [x] **Crossformer** - Crossformer: Transformer Utilizing Cross-Dimension Dependency for Multivariate Time Series Forecasting [[ICLR 2023]](https://openreview.net/pdf?id=vSVLM2j9eie)[[Code]](https://github.com/thuml/Time-Series-Library/blob/main/models/Crossformer.py).
  
 ## Usage
 
@@ -83,54 +47,3 @@ Here, and by using the mode option for our arguments we can force the TimesNet m
 - Add the model file to the folder `./models`. You can follow the `./models/Transformer.py`.
 - Include the newly added model in the `Exp_Basic.model_dict` of  `./exp/exp_basic.py`.
 - Create the corresponding scripts under the folder `./scripts`.
-
-## Citation
-
-If you find this repo useful, please cite our paper.
-
-```
-@inproceedings{wu2023timesnet,
-  title={TimesNet: Temporal 2D-Variation Modeling for General Time Series Analysis},
-  author={Haixu Wu and Tengge Hu and Yong Liu and Hang Zhou and Jianmin Wang and Mingsheng Long},
-  booktitle={International Conference on Learning Representations},
-  year={2023},
-}
-```
-
-## Contact
-If you have any questions or suggestions, feel free to contact:
-
-- Haixu Wu (wuhx23@mails.tsinghua.edu.cn)
-- Tengge Hu (htg21@mails.tsinghua.edu.cn)
-- Haoran Zhang (z-hr20@mails.tsinghua.edu.cn)
-- Jiawei Guo (guo-jw21@mails.tsinghua.edu.cn)
-
-Or describe it in Issues.
-
-## Acknowledgement
-
-This project is supported by the National Key R&D Program of China (2021YFB1715200).
-
-This library is constructed based on the following repos:
-
-- Forecasting: https://github.com/thuml/Autoformer.
-
-- Anomaly Detection: https://github.com/thuml/Anomaly-Transformer.
-
-- Classification: https://github.com/thuml/Flowformer.
-
-All the experiment datasets are public, and we obtain them from the following links:
-
-- Long-term Forecasting and Imputation: https://github.com/thuml/Autoformer.
-
-- Short-term Forecasting: https://github.com/ServiceNow/N-BEATS.
-
-- Anomaly Detection: https://github.com/thuml/Anomaly-Transformer.
-
-- Classification: https://www.timeseriesclassification.com/.
-
-## All Thanks To Our Contributors
-
-<a href="https://github.com/thuml/Time-Series-Library/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=thuml/Time-Series-Library" />
-</a>
