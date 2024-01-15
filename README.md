@@ -1,4 +1,9 @@
 # Time Series Library (TSlib)
+
+The current repository is based on a forked version of the TSlib and contains the code based used to complete a project conducted in the context of the "Deep Learning" class taught during the Fall semester of 2023 at ETH Zurich.
+
+In the scope of this project, we attempted to add the element of causality in the seminal TimesNet work. In order to test our approach we deploy a plethora of datasets from various domains and train different baseline models to compare with our proposed method. 
+
 TSlib is an open-source library for deep learning researchers, especially for deep time series analysis.
 
 We provide a neat code base to evaluate advanced deep time series models or develop your model, which covers five mainstream tasks: **long- and short-term forecasting, imputation, anomaly detection, and classification.**
@@ -46,7 +51,7 @@ See our latest paper [[TimesNet]](https://arxiv.org/abs/2210.02186) for the comp
  
 ## Usage
 
-1. Install Python 3.8. For convenience, execute the following command.
+1. Install Python 3.10.6. For convenience, execute the following command.
 
 ```
 pip install -r requirements.txt
@@ -62,16 +67,16 @@ pip install -r requirements.txt
 
 ```
 # long-term forecast
-bash ./scripts/long_term_forecast/ETT_script/TimesNet_ETTh1.sh
+bash ./scripts/long_term_forecast/Weather_script/TimesNet.sh
 # short-term forecast
 bash ./scripts/short_term_forecast/TimesNet_M4.sh
-# imputation
-bash ./scripts/imputation/ETT_script/TimesNet_ETTh1.sh
-# anomaly detection
-bash ./scripts/anomaly_detection/PSM/TimesNet.sh
-# classification
-bash ./scripts/classification/TimesNet.sh
+# long-term forecast with causality mode
+bash ./scripts/long_term_forecast/Weather_script/TimesNet.sh --mode causal
+# short-term forecast with causality mode
+bash ./scripts/short_term_forecast/TimesNet_M4.sh --mode causal
 ```
+
+Here, and by using the mode option for our arguments we can force the TimesNet model to make use of the appropriate causality mode. We make a distinction between using a causal TimesNet model and one that make no use of causal structure.
 
 4. Develop your own model.
 
