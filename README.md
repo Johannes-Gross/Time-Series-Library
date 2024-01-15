@@ -23,7 +23,7 @@ pip install -r requirements.txt
 <img src=".\pic\dataset.png" height = "200" alt="" align=center />
 </p>
 
-3. Train and evaluate model. We provide the experiment scripts for all benchmarks under the folder `./scripts/`. You can reproduce the experiment results as the following examples:
+3. Train and evaluate model. We provide the experiment scripts for all benchmarks under the folder `./scripts/`. Specify the mode using the `--mode` flag (regular, causal, acausal). You can reproduce the experiment results as the following examples:
 
 ```
 # long-term forecast
