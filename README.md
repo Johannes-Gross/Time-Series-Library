@@ -1,13 +1,8 @@
 # Enhancing Temporal Causality in TimesNet with 2D TCN
 
-The current repository is based on a forked version of the TSlib and contains the code base used in a project for Deep Learning class taught during the Fall semester of 2023 at ETH Zurich.
+This is a forked repository of the TSlib and contains the code used in the deep learning project named "Enhancing Temporal Causality in TimesNet with 2D TCN". This project was conducted following the ETH Zürich Deep Learning class of HS2023.
 
-In the scope of this project, we attempted to add the element of causality in the seminal TimesNet work. In order to test our approach we deploy a plethora of datasets from various domains and train different baseline models to compare with our proposed method. 
-
-TSlib is an open-source library for deep learning researchers, especially for deep time series analysis.
-
-We provide a neat code base to evaluate advanced deep time series models or develop your model, which covers five mainstream tasks: **long- and short-term forecasting, imputation, anomaly detection, and classification.**
-
+In this study, we explore the integration of a 2D Temporal Convolutional Network (2D-TCN) within the TimesNet framework to enhance the model's ability to interpret temporal causality in time-series forecasting. Our research compares this novel approach against traditional machine learning methods like ARIMA and state-of-the-art deep learning models, including LSTM and ETSFormer, across various long-term and short-term forecasting tasks. Contrary to our initial hypothesis, the results reveal that the causal 2D-TCN integration does not significantly outperform the original TimesNet model and is sometimes surpassed by the traditional ARIMA method. This study highlights the complexities of embedding temporal causality in deep learning models and underscores the continuing relevance of traditional methods in certain forecasting scenarios.
 
 ## Usage
 
@@ -17,7 +12,7 @@ We provide a neat code base to evaluate advanced deep time series models or deve
 pip install -r requirements.txt
 ```
 
-2. Prepare Data. You can obtain the well pre-processed datasets from [[Google Drive]](https://drive.google.com/drive/folders/13Cg1KYOlzM5C7K8gK8NfC-F3EYxkM3D2?usp=sharing) or [[Baidu Drive]](https://pan.baidu.com/s/1r3KhGd0Q9PJIUZdfEYoymg?pwd=i9iy), Then place the downloaded data in the folder`./dataset`. Here is a summary of supported datasets.
+2. Prepare Data. You can obtain the well-pre-processed datasets from [[Google Drive]](https://drive.google.com/drive/folders/13Cg1KYOlzM5C7K8gK8NfC-F3EYxkM3D2?usp=sharing) or [[Baidu Drive]](https://pan.baidu.com/s/1r3KhGd0Q9PJIUZdfEYoymg?pwd=i9iy), Then place the downloaded data in the folder`./dataset`. Here is a summary of supported datasets.
 
 <p align="center">
 <img src=".\pic\dataset.png" height = "200" alt="" align=center />
@@ -36,10 +31,6 @@ bash ./scripts/long_term_forecast/Weather_script/TimesNet.sh --mode causal
 bash ./scripts/short_term_forecast/TimesNet_M4.sh --mode causal
 ```
 
-Here, and by using the mode option for our arguments we can force the TimesNet model to make use of the appropriate causality mode. We make a distinction between using a causal TimesNet model and one that make no use of causal structure.
+Here, and by using the mode option for our arguments, we can force the TimesNet model to use the appropriate causality mode. We distinguish between using a causal TimesNet model and one that makes no use of causal structure.
 
-4. Develop your own model.
 
-- Add the model file to the folder `./models`. You can follow the `./models/Transformer.py`.
-- Include the newly added model in the `Exp_Basic.model_dict` of  `./exp/exp_basic.py`.
-- Create the corresponding scripts under the folder `./scripts`.
